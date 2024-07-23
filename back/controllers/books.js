@@ -17,7 +17,7 @@ exports.bestRating = (req, res) => {
     Book.find().sort({ averageRating: -1 }).limit(3).then(books => res.status(200).json(books)).catch(error => res.status(400).json({error}))
 };
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     const bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
@@ -26,7 +26,7 @@ exports.create = (req, res) => {
         ...bookObject,
         ratings: [],
         averageRating: 0,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: req.body.imageUrl,
     });
 
     book.save().then(() => { res.status(201).json({message: 'Book saved !'})}).catch(error => res.status(400).json({ error }));
@@ -35,7 +35,7 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
     const bookObject = req.file ? {
         ...JSON.parse(req.body.book),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: req.body.imageUrl
     } : { ...req.body };
 
     delete bookObject.userId
