@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const authRoutes = require('./routes/auth');
+const booksRoutes = require('./routes/books');
 
 mongoose.connect('mongodb+srv://mvg:AqOE13xgbu9eYYad@mvg-db.evagwgp.mongodb.net/?retryWrites=true&w=majority&appName=MVG-DB')
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -19,5 +21,9 @@ app.use((req, res, next) => {
 
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api/books', booksRoutes);
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
